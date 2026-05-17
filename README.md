@@ -5,20 +5,20 @@ O **ClassUp** é uma ferramenta de gestão pedagógica e gamificação criada pa
 Inspirado em dinâmicas de RPG e jogos eletrônicos, o sistema transforma o esforço diário dos alunos em pontos que os movem por uma trilha digital em tempo real em direção à meta final.
 
 
-## 🎯 Objetivos do Projeto
+## Objetivos do Projeto
 * **Estimular a autonomia:** Focar no acompanhamento e evolução dos alunos, mudando a lógica de "punição" para "conquista".
 * **Identidade Coletiva:** Customizado especialmente para a **Turma 22**, contando com a liderança digital dos professores: Tia Rosinha, Teacher Ramon e Tia Judvânia.
 * **Reconhecimento:** Ao final de cada ciclo, o sistema gera o pódio dos campeões e permite a impressão automática do *Certificado de Aluno Destaque do Mês*.
 
 
-## 🛠️ Tecnologias Utilizadas nesta Versão
+## Tecnologias Utilizadas nesta Versão
 * HTML5 / CSS3 (Variáveis Globais e Animações de Keyframes)
 * Tailwind CSS (Via CDN para estilização ágil)
 * JavaScript Puro (Vanilla JS com manipulação direta da DOM)
 * LocalStorage (Para persistência dos dados diretamente no navegador do professor)
 
 
-## 🔄 Diário de Bordo & Evolução do Código
+## Diário de Bordo & Evolução do Código
 
 ### [Dia 1] Versão 1.0.0 (O Protótipo Inicial)
 * **Status:** Concluído, mas com limitações de ambiente.
