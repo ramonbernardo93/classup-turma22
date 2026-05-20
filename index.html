@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ClassUp — Turma 22</title>
 
-  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Fonts: Orbitron (gamer/display) + Nunito (corpo legível) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -63,7 +61,6 @@
     }
 
     * { box-sizing: border-box; margin:0; padding:0; }
-    html, body { height:100%; }
 
     body {
       background-color: var(--bg-deep);
@@ -192,13 +189,12 @@
       position:fixed; inset:0; background:rgba(0,0,0,.75);
       backdrop-filter:blur(6px); z-index:100;
       display:flex; align-items:center; justify-content:center;
-      animation: popin .25s ease both;
     }
+    .modal-overlay.hidden { display: none !important; }
     .modal-box {
       background:var(--bg-card); border:1px solid var(--border);
       border-radius:24px; width:min(95vw,520px);
       box-shadow:0 30px 80px rgba(0,0,0,.7);
-      animation: popin .35s cubic-bezier(.34,1.56,.64,1) both;
       overflow:hidden;
     }
     .modal-header {
@@ -272,7 +268,6 @@
     }
     #toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
 
-    /* mobile tweaks */
     @media(max-width:768px){
       .avatar-bubble { width:42px; height:42px; font-size:1.5rem; }
       .goal-flag { font-size:2rem; }
@@ -281,19 +276,9 @@
 </head>
 <body class="min-h-screen">
 
-<!-- ══════════════════════════════════════════════
-     TOAST
-════════════════════════════════════════════════ -->
 <div id="toast"></div>
-
-<!-- ══════════════════════════════════════════════
-     CERTIFICADO (só aparece ao imprimir)
-════════════════════════════════════════════════ -->
 <div id="cert-area"></div>
 
-<!-- ══════════════════════════════════════════════
-     MODAL DE CONFIGURAÇÃO DO PROFESSOR
-════════════════════════════════════════════════ -->
 <div id="modal-config" class="modal-overlay hidden">
   <div class="modal-box w-full max-w-md">
     <div class="modal-header">
@@ -301,42 +286,30 @@
       <button onclick="closeModal('modal-config')" class="text-slate-400 hover:text-white text-xl leading-none">✕</button>
     </div>
     <div class="p-6 space-y-5">
-
-      <!-- Adicionar aluno -->
       <div>
         <p class="text-xs font-bold text-slate-400 tracking-widest mb-3">ADICIONAR ALUNO</p>
         <div class="space-y-3">
           <input id="inp-name" type="text" placeholder="Nome do aluno…" maxlength="22"
             class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand" />
-
           <div>
             <p class="text-xs text-slate-500 mb-2">Escolha o avatar:</p>
-            <div id="emoji-picker" class="grid grid-cols-6 gap-2">
-            </div>
+            <div id="emoji-picker" class="grid grid-cols-6 gap-2"></div>
           </div>
           <input id="inp-avatar" type="hidden" value="👦" />
-
-          <button onclick="addStudent()"
-            class="w-full bg-brand hover:bg-brand-dark text-white font-bold rounded-xl py-2 transition-colors text-sm tracking-wide">
+          <button onclick="addStudent()" class="w-full bg-brand hover:bg-brand-dark text-white font-bold rounded-xl py-2 transition-colors text-sm tracking-wide">
             ➕ Adicionar Aluno
           </button>
         </div>
       </div>
-
-      <!-- Lista de alunos -->
       <div>
         <p class="text-xs font-bold text-slate-400 tracking-widest mb-3">ALUNOS CADASTRADOS</p>
         <div id="student-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
       </div>
-
-      <!-- Ações perigosas -->
       <div class="pt-2 border-t border-slate-700 space-y-2">
-        <button onclick="resetAllPoints()"
-          class="w-full bg-yellow-900 hover:bg-yellow-800 border border-yellow-700 text-yellow-300 font-bold rounded-xl py-2 text-sm transition-colors">
+        <button onclick="resetAllPoints()" class="w-full bg-yellow-900 hover:bg-yellow-800 border border-yellow-700 text-yellow-300 font-bold rounded-xl py-2 text-sm transition-colors">
           ⚠️ Zerar Pontos de Todos
         </button>
-        <button onclick="resetEverything()"
-          class="w-full bg-red-900 hover:bg-red-800 border border-red-700 text-red-300 font-bold rounded-xl py-2 text-sm transition-colors">
+        <button onclick="resetEverything()" class="w-full bg-red-900 hover:bg-red-800 border border-red-700 text-red-300 font-bold rounded-xl py-2 text-sm transition-colors">
           🗑️ Resetar Tudo (apaga alunos)
         </button>
       </div>
@@ -344,9 +317,6 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     MODAL DE ENCERRAMENTO DO MÊS / PÓDIO
-════════════════════════════════════════════════ -->
 <div id="modal-podium" class="modal-overlay hidden">
   <div class="modal-box max-w-lg w-full">
     <div class="modal-header" style="background:linear-gradient(135deg,#1C0F2E,#0B1220);">
@@ -356,50 +326,28 @@
       </div>
       <button onclick="closeModal('modal-podium')" class="text-slate-400 hover:text-white text-xl leading-none">✕</button>
     </div>
-
-    <!-- Pódio -->
     <div class="px-4 pt-4 pb-0">
       <div class="podium-wrap" id="podium-display"></div>
     </div>
-
-    <!-- Nomes abaixo do pódio -->
     <div id="podium-names" class="flex justify-center gap-2 px-6 py-3 text-center text-xs font-bold"></div>
-
     <div class="px-6 pb-6 space-y-3">
-      <button onclick="generateCertificate()" id="btn-cert"
-        class="w-full py-3 rounded-xl font-bold text-sm tracking-wide transition-all
-               bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500
-               text-yellow-900 shadow-lg shadow-yellow-900/40">
+      <button onclick="generateCertificate()" id="btn-cert" class="w-full py-3 rounded-xl font-bold text-sm tracking-wide transition-all bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-yellow-900 shadow-lg shadow-yellow-900/40">
         🎓 Gerar Certificado do Campeão
       </button>
-      <button onclick="closeModal('modal-podium')"
-        class="w-full py-2 rounded-xl font-bold text-sm text-slate-400 border border-slate-700 hover:border-slate-500 transition-colors">
+      <button onclick="closeModal('modal-podium')" class="w-full py-2 rounded-xl font-bold text-sm text-slate-400 border border-slate-700 hover:border-slate-500 transition-colors">
         Fechar
       </button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     LAYOUT PRINCIPAL
-════════════════════════════════════════════════ -->
 <div class="flex flex-col min-h-screen">
-
-  <!-- ── HEADER ── -->
   <header class="relative border-b border-slate-800 overflow-hidden">
-    <!-- shimmer line -->
     <div class="absolute bottom-0 left-0 right-0 h-px shimmer-bar opacity-60"></div>
-
     <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-
-      <!-- Logo + turma -->
       <div class="flex items-center gap-4">
         <div class="relative">
-          <span class="font-orbitron text-3xl font-black" style="
-            background:linear-gradient(135deg,#A78BFA,#22D3EE);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-            filter:drop-shadow(0 0 14px #7C3AED88);
-          ">ClassUp</span>
+          <span class="font-orbitron text-3xl font-black" style="background:linear-gradient(135deg,#A78BFA,#22D3EE); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px #7C3AED88);">ClassUp</span>
           <span class="absolute -top-1 -right-4 text-xs bg-brand text-white font-orbitron rounded px-1 font-bold leading-tight">22</span>
         </div>
         <div class="hidden sm:block w-px h-8 bg-slate-700"></div>
@@ -409,46 +357,22 @@
         </div>
       </div>
 
-      <!-- Professores -->
       <div class="flex items-center gap-3">
-        <p class="text-xs text-slate-500 font-bold tracking-widest hidden md:block">PROFESSORES</p>
-        <div class="flex items-center gap-2">
-          <div class="flex flex-col items-center">
-            <span class="text-2xl">👩‍🦰</span>
-            <span class="text-xs text-slate-400 font-bold whitespace-nowrap">Tia Rosinha</span>
-          </div>
-          <div class="flex flex-col items-center">
-            <span class="text-2xl">👨🏻‍🏫</span>
-            <span class="text-xs text-slate-400 font-bold whitespace-nowrap">Teacher Ramon</span>
-          </div>
-          <div class="flex flex-col items-center">
-            <span class="text-2xl">👩🏾‍🦱</span>
-            <span class="text-xs text-slate-400 font-bold whitespace-nowrap">Tia Judvânia</span>
-          </div>
+        <div class="flex items-center gap-4">
+          <div class="flex flex-col items-center"><span class="text-2xl">👩‍🦰</span><span class="text-[10px] text-slate-400 font-bold">Tia Rosinha</span></div>
+          <div class="flex flex-col items-center"><span class="text-2xl">👨🏻‍🏫</span><span class="text-[10px] text-slate-400 font-bold">Teacher Ramon</span></div>
+          <div class="flex flex-col items-center"><span class="text-2xl">👩🏾‍🦱</span><span class="text-[10px] text-slate-400 font-bold">Tia Judvânia</span></div>
         </div>
       </div>
 
-      <!-- Botões header -->
       <div class="flex items-center gap-2">
-        <button onclick="openModal('modal-config')"
-          class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-brand
-                 text-slate-300 hover:text-white font-bold rounded-xl px-4 py-2 text-xs transition-all tracking-wide">
-          ⚙️ <span class="hidden sm:inline">Configurar</span>
-        </button>
-        <button onclick="endMonth()"
-          class="flex items-center gap-2 bg-gradient-to-r from-brand to-purple-800 hover:from-purple-500 hover:to-brand
-                 text-white font-bold rounded-xl px-4 py-2 text-xs transition-all tracking-wide
-                 shadow-lg shadow-brand/40 border border-brand/50">
-          🏁 <span class="hidden sm:inline">Encerrar Mês</span>
-        </button>
+        <button onclick="openModal('modal-config')" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold rounded-xl px-4 py-2 text-xs transition-all">⚙️ Configurar</button>
+        <button onclick="endMonth()" class="flex items-center gap-2 bg-gradient-to-r from-brand to-purple-800 text-white font-bold rounded-xl px-4 py-2 text-xs transition-all shadow-lg border border-brand/50">🏁 Encerrar Mês</button>
       </div>
     </div>
   </header>
 
-  <!-- ── CORPO PRINCIPAL ── -->
   <main class="flex-1 max-w-screen-2xl mx-auto w-full px-4 sm:px-6 py-6 flex flex-col gap-6">
-
-    <!-- ── TRILHA ── -->
     <section class="card">
       <div class="card-header flex items-center justify-between">
         <span>🗺️ TRILHA DA JORNADA</span>
@@ -458,38 +382,22 @@
         <div class="trail-wrapper" id="trail-container">
           <div class="trail-track"></div>
           <div class="trail-dots" id="trail-dots"></div>
-          <!-- avatares injetados via JS -->
           <div class="goal-flag">🏰</div>
           <div class="goal-label">META<br>100 PTS</div>
-          <!-- container dos pins -->
           <div id="pins-layer" style="position:absolute;inset:0;pointer-events:none;"></div>
         </div>
-
-        <!-- legenda de progresso vazia -->
-        <div id="trail-empty" class="text-center text-slate-600 text-sm py-4 hidden">
-          Nenhum aluno cadastrado ainda. Clique em ⚙️ Configurar para começar!
-        </div>
+        <div id="trail-empty" class="text-center text-slate-600 text-sm py-4 hidden">Nenhum aluno cadastrado.</div>
       </div>
     </section>
 
-    <!-- ── GRID INFERIOR ── -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-      <!-- PAINEL DE COMANDO (col 1 e 2 no md) -->
       <div class="md:col-span-2 card flex flex-col" id="command-panel">
         <div class="card-header">🎮 PAINEL DE COMANDO</div>
-
-        <!-- Estado: nenhum aluno selecionado -->
         <div id="panel-empty" class="flex-1 flex flex-col items-center justify-center text-center p-8 gap-3">
           <span class="text-5xl">👆</span>
           <p class="text-slate-400 font-bold">Selecione um aluno na trilha</p>
-          <p class="text-slate-600 text-sm">Clique no avatar para liberar o painel de ações</p>
         </div>
-
-        <!-- Estado: aluno selecionado -->
-        <div id="panel-student" class="hidden flex-1 flex flex-col p-5 gap-5 animation-slidein">
-
-          <!-- Info do aluno -->
+        <div id="panel-student" class="hidden flex-1 flex flex-col p-5 gap-5">
           <div class="flex items-center gap-4">
             <div class="text-5xl" id="sel-avatar">👦</div>
             <div class="flex-1">
@@ -498,66 +406,30 @@
                 <span class="text-brand-light font-orbitron font-bold text-sm" id="sel-pts">0</span>
                 <span class="text-slate-500 text-xs font-bold">/ 100 pts</span>
               </div>
-              <div class="student-progress-bg">
-                <div class="student-progress-fill" id="sel-bar" style="width:0%"></div>
-              </div>
+              <div class="student-progress-bg"><div class="student-progress-fill" id="sel-bar" style="width:0%"></div></div>
             </div>
-            <button onclick="deselectStudent()"
-              class="text-slate-500 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg p-2 transition-colors text-lg leading-none">
-              ✕
-            </button>
+            <button onclick="deselectStudent()" class="text-slate-500 hover:text-white bg-slate-800 rounded-lg p-2 text-lg">✕</button>
           </div>
-
-          <!-- Ações rápidas -->
           <div>
             <p class="text-xs font-bold text-slate-500 tracking-widest mb-3">ADICIONAR PONTOS</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <button class="action-btn" onclick="awardPoints(5)">
-                <span class="text-xl">🙋</span>
-                <span>Participação nas aulas</span>
-                <span class="pts">+5</span>
-              </button>
-              <button class="action-btn" onclick="awardPoints(10)">
-                <span class="text-xl">😇</span>
-                <span>Bom comportamento</span>
-                <span class="pts">+10</span>
-              </button>
-              <button class="action-btn" onclick="awardPoints(10)">
-                <span class="text-xl">🤝</span>
-                <span>Gentileza com colegas</span>
-                <span class="pts">+10</span>
-              </button>
-              <button class="action-btn" onclick="awardPoints(15)">
-                <span class="text-xl">📚</span>
-                <span>Tarefa / Capricho extra</span>
-                <span class="pts">+15</span>
-              </button>
+              <button class="action-btn" onclick="awardPoints(5)"><span>🙋 Participação</span><span class="pts">+5</span></button>
+              <button class="action-btn" onclick="awardPoints(10)"><span>😇 Comportamento</span><span class="pts">+10</span></button>
+              <button class="action-btn" onclick="awardPoints(10)"><span>🤝 Gentileza</span><span class="pts">+10</span></button>
+              <button class="action-btn" onclick="awardPoints(15)"><span>📚 Capricho / Tarefa</span><span class="pts">+15</span></button>
             </div>
           </div>
-
-          <!-- Pontos manuais -->
           <div class="flex gap-2">
-            <input id="inp-custom-pts" type="number" min="1" max="100" placeholder="Pontos personalizados…"
-              class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand" />
-            <button onclick="awardCustomPoints()"
-              class="bg-brand hover:bg-brand-dark text-white font-bold rounded-xl px-4 py-2 text-sm transition-colors">
-              ➕
-            </button>
+            <input id="inp-custom-pts" type="number" placeholder="Pontos personalizados…" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white" />
+            <button onclick="awardCustomPoints()" class="bg-brand text-white font-bold rounded-xl px-4">➕</button>
           </div>
-
-          <!-- Remover pontos -->
           <div class="flex gap-2">
-            <input id="inp-remove-pts" type="number" min="1" max="100" placeholder="Remover pontos…"
-              class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand" />
-            <button onclick="removePoints()"
-              class="bg-red-900 hover:bg-red-800 border border-red-700 text-red-300 font-bold rounded-xl px-4 py-2 text-sm transition-colors">
-              ➖
-            </button>
+            <input id="inp-remove-pts" type="number" placeholder="Remover pontos…" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white" />
+            <button onclick="removePoints()" class="bg-red-900 text-red-300 font-bold rounded-xl px-4">➖</button>
           </div>
         </div>
       </div>
 
-      <!-- RANKING (col 3) -->
       <div class="card flex flex-col">
         <div class="card-header flex items-center justify-between">
           <span>🏆 RANKING DO MÊS</span>
@@ -565,79 +437,38 @@
         </div>
         <div class="flex-1 p-3 overflow-y-auto max-h-96" id="ranking-list"></div>
       </div>
-
     </div>
   </main>
-
-  <!-- footer -->
-  <footer class="border-t border-slate-800 text-center py-3">
-    <p class="text-slate-600 text-xs font-bold tracking-widest">ClassUp • Turma 22 • Todos os direitos do aprendizado reservados 🚀</p>
-  </footer>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     JAVASCRIPT PRINCIPAL
-════════════════════════════════════════════════ -->
 <script>
-/* ═══════════════════════════════════════════════
-   DADOS E ESTADO
-═══════════════════════════════════════════════ */
-
-// Emojis disponíveis para avatar
-const AVATARS = ['👦','👧','🧒','👦🏾','👧🏾','🧒🏻','👦🏻','👧🏻','👦🏿','👧🏿','🧒🏾','😎','🤓','🦸','🦸‍♀️','🧑‍🎓'];
-
-// Ações de pontuação
-const ACTIONS = [
-  { label: 'Participação nas aulas',      pts: 5,  icon: '🙋' },
-  { label: 'Bom comportamento',           pts: 10, icon: '😇' },
-  { label: 'Gentileza com colegas',       pts: 10, icon: '🤝' },
-  { label: 'Tarefa / Capricho extra',     pts: 15, icon: '📚' },
-];
-
-let students = [];   // array de { id, name, avatar, points }
+const AVATARS = ['👦🏻','👧🏼','👧🏻','👦🏼','👦','👧','🧒','😎','🤓','🦸','🦸‍♀️'];
+let students = [];
 let selectedId = null;
 
-/* ═══════════════════════════════════════════════
-   LOCAL STORAGE
-═══════════════════════════════════════════════ */
-
-function saveData() {
-  localStorage.setItem('classup_students', JSON.stringify(students));
-}
+function saveData() { localStorage.setItem('classup_students', JSON.stringify(students)); }
 
 function loadData() {
   const raw = localStorage.getItem('classup_students');
-  if (raw) {
+  if (raw && JSON.parse(raw).length > 0) {
     students = JSON.parse(raw);
   } else {
-    // dados de exemplo para demonstração
     students = [
-      { id: uid(), name: 'Ana Beatriz',   avatar: '👧',   points: 45 },
-      { id: uid(), name: 'Carlos',        avatar: '👦',   points: 30 },
-      { id: uid(), name: 'Mariana',       avatar: '👧🏻',  points: 60 },
-      { id: uid(), name: 'Lucas',         avatar: '🤓',   points: 20 },
-      { id: uid(), name: 'Sofia',         avatar: '🦸‍♀️', points: 80 },
+      { id: uid(), name: 'ENZO',    avatar: '👦🏻', points: 0 },
+      { id: uid(), name: 'ESTER',   avatar: '👧🏼', points: 0 },
+      { id: uid(), name: 'CECÍLIA', avatar: '👧🏻', points: 0 },
+      { id: uid(), name: 'JOSÉ',    avatar: '👦🏼', points: 0 },
     ];
     saveData();
   }
 }
 
-/* ═══════════════════════════════════════════════
-   UTILITÁRIOS
-═══════════════════════════════════════════════ */
-
-function uid() {
-  return '_' + Math.random().toString(36).slice(2, 9);
-}
-
-function clamp(v, min, max) {
-  return Math.min(max, Math.max(min, v));
-}
+function uid() { return '_' + Math.random().toString(36).slice(2, 9); }
+function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
@@ -649,25 +480,17 @@ function openModal(id) {
 function closeModal(id) {
   document.getElementById(id).classList.add('hidden');
   document.body.style.overflow = '';
+  document.body.style.pointerEvents = 'auto'; 
 }
 
-/* ═══════════════════════════════════════════════
-   EMOJI PICKER
-═══════════════════════════════════════════════ */
-
 function buildEmojiPicker() {
-  const picker = document.getElementById('emoji-picker');
-  picker.innerHTML = '';
+  const picker = document.getElementById('emoji-picker'); picker.innerHTML = '';
   AVATARS.forEach((em, i) => {
-    const btn = document.createElement('button');
-    btn.textContent = em;
-    btn.className = 'text-2xl rounded-lg p-1 border-2 transition-all ' +
-      (i === 0 ? 'border-brand bg-brand/20' : 'border-transparent hover:border-slate-600 bg-slate-800');
+    const btn = document.createElement('button'); btn.textContent = em;
+    btn.className = 'text-2xl rounded-lg p-1 border-2 transition-all ' + (i === 0 ? 'border-brand bg-brand/20' : 'border-transparent bg-slate-800');
     btn.onclick = () => {
       document.getElementById('inp-avatar').value = em;
-      picker.querySelectorAll('button').forEach(b => {
-        b.className = 'text-2xl rounded-lg p-1 border-2 transition-all border-transparent hover:border-slate-600 bg-slate-800';
-      });
+      picker.querySelectorAll('button').forEach(b => b.className = 'text-2xl rounded-lg p-1 border-2 border-transparent bg-slate-800');
       btn.className = 'text-2xl rounded-lg p-1 border-2 border-brand bg-brand/20';
     };
     picker.appendChild(btn);
@@ -675,498 +498,211 @@ function buildEmojiPicker() {
   document.getElementById('inp-avatar').value = AVATARS[0];
 }
 
-/* ═══════════════════════════════════════════════
-   GERENCIAMENTO DE ALUNOS
-═══════════════════════════════════════════════ */
-
 function addStudent() {
-  const name   = document.getElementById('inp-name').value.trim();
+  const name = document.getElementById('inp-name').value.trim();
   const avatar = document.getElementById('inp-avatar').value;
-
-  if (!name) { showToast('⚠️ Digite o nome do aluno!'); return; }
-
+  if (!name) { showToast('⚠️ Digite o nome!'); return; }
   students.push({ id: uid(), name, avatar, points: 0 });
-  saveData();
-
-  document.getElementById('inp-name').value = '';
-  buildEmojiPicker();
-
-  renderAll();
-  showToast(`✅ ${name} adicionado!`);
+  saveData(); document.getElementById('inp-name').value = '';
+  buildEmojiPicker(); renderAll(); showToast(`✅ ${name} adicionado!`);
 }
 
 function removeStudent(id) {
-  const s = students.find(s => s.id === id);
-  if (!s) return;
+  const s = students.find(s => s.id === id); if (!s) return;
   if (!confirm(`Remover ${s.name}?`)) return;
   students = students.filter(s => s.id !== id);
   if (selectedId === id) deselectStudent();
-  saveData();
-  renderAll();
-  showToast(`🗑️ ${s.name} removido.`);
+  saveData(); renderAll(); showToast(`🗑️ Removido.`);
 }
 
 function resetAllPoints() {
-  if (!confirm('Zerar os pontos de TODOS os alunos?')) return;
-  students.forEach(s => s.points = 0);
-  saveData();
-  renderAll();
-  showToast('⚠️ Todos os pontos zerados!');
+  if (!confirm('Zerar pontos de todos?')) return;
+  students.forEach(s => s.points = 0); saveData(); renderAll(); showToast('⚠️ Pontos zerados!');
 }
 
 function resetEverything() {
-  if (!confirm('Isso apagará TODOS os alunos. Tem certeza?')) return;
-  students = [];
-  selectedId = null;
-  saveData();
-  renderAll();
-  closeModal('modal-config');
-  showToast('🗑️ Turma resetada.');
+  if (!confirm('Apagar todos os alunos?')) return;
+  students = []; selectedId = null; saveData(); renderAll(); closeModal('modal-config');
 }
 
-/* ═══════════════════════════════════════════════
-   SELEÇÃO DE ALUNO
-═══════════════════════════════════════════════ */
-
 function selectStudent(id) {
-  selectedId = id;
-  renderCommandPanel();
-  // atualiza seleção visual nos pins
-  document.querySelectorAll('.avatar-pin').forEach(el => {
-    el.classList.toggle('selected', el.dataset.id === id);
-  });
+  selectedId = id; renderCommandPanel();
+  document.querySelectorAll('.avatar-pin').forEach(el => el.classList.toggle('selected', el.dataset.id === id));
 }
 
 function deselectStudent() {
-  selectedId = null;
-  renderCommandPanel();
+  selectedId = null; renderCommandPanel();
   document.querySelectorAll('.avatar-pin').forEach(el => el.classList.remove('selected'));
 }
 
-/* ═══════════════════════════════════════════════
-   PONTUAÇÃO
-═══════════════════════════════════════════════ */
-
 function awardPoints(pts) {
   if (!selectedId) return;
-  const s = students.find(s => s.id === selectedId);
-  if (!s) return;
-  const before = s.points;
-  s.points = clamp(s.points + pts, 0, 100);
+  const s = students.find(s => s.id === selectedId); if (!s) return;
+  const before = s.points; s.points = clamp(s.points + pts, 0, 100);
   saveData();
-
-  if (s.points >= 100 && before < 100) {
-    launchConfetti();
-    showToast(`🎉 ${s.name} chegou à META!`);
-  } else {
-    showToast(`+${pts} pts para ${s.name}! 🌟`);
-  }
-  renderAll();
+  if (s.points >= 100 && before < 100) { launchConfetti(); }
+  showToast(`+${pts} pts para ${s.name}!`); renderAll();
 }
 
 function awardCustomPoints() {
   const v = parseInt(document.getElementById('inp-custom-pts').value);
-  if (!v || v < 1) { showToast('⚠️ Informe um valor válido!'); return; }
-  awardPoints(v);
-  document.getElementById('inp-custom-pts').value = '';
+  if (!v || v < 1) { showToast('⚠️ Valor inválido!'); return; }
+  awardPoints(v); document.getElementById('inp-custom-pts').value = '';
 }
 
 function removePoints() {
   if (!selectedId) return;
   const v = parseInt(document.getElementById('inp-remove-pts').value);
-  if (!v || v < 1) { showToast('⚠️ Informe um valor válido!'); return; }
-  const s = students.find(s => s.id === selectedId);
-  if (!s) return;
-  s.points = clamp(s.points - v, 0, 100);
-  saveData();
-  showToast(`-${v} pts de ${s.name}`);
-  renderAll();
+  if (!v || v < 1) { showToast('⚠️ Valor inválido!'); return; }
+  const s = students.find(s => s.id === selectedId); if (!s) return;
+  s.points = clamp(s.points - v, 0, 100); saveData(); renderAll();
   document.getElementById('inp-remove-pts').value = '';
 }
 
-/* ═══════════════════════════════════════════════
-   RENDERIZAÇÃO: TRILHA
-═══════════════════════════════════════════════ */
-
 function renderTrail() {
-  const container  = document.getElementById('trail-container');
-  const pinsLayer  = document.getElementById('pins-layer');
-  const emptyMsg   = document.getElementById('trail-empty');
-
-  // Dots da trilha
+  const container = document.getElementById('trail-container');
+  const pinsLayer = document.getElementById('pins-layer');
+  const emptyMsg = document.getElementById('trail-empty');
   const dotsEl = document.getElementById('trail-dots');
+  
   dotsEl.innerHTML = '';
   for (let i = 0; i <= 20; i++) {
-    const d = document.createElement('div');
-    d.className = 'trail-dot';
-    dotsEl.appendChild(d);
+    const d = document.createElement('div'); d.className = 'trail-dot'; dotsEl.appendChild(d);
   }
-
   pinsLayer.innerHTML = '';
-
-  if (students.length === 0) {
-    emptyMsg.classList.remove('hidden');
-    return;
-  }
+  if (students.length === 0) { emptyMsg.classList.remove('hidden'); return; }
   emptyMsg.classList.add('hidden');
 
-  // Largura útil da trilha (com margem para a bandeira)
   const trackWidth = container.offsetWidth || 800;
-  const pinW       = 56; // largura aproximada de um pin
-  const startX     = 40;
-  const endX       = trackWidth - 80; // espaço para a bandeira
-  const usable     = endX - startX;
+  const startX = 40; const endX = trackWidth - 100; const usable = endX - startX;
 
   students.forEach((s, idx) => {
-    const pct  = s.points / 100;
-    const left = startX + pct * usable;
-
+    const pct = s.points / 100; const left = startX + pct * usable;
     const pin = document.createElement('div');
-    pin.className = 'avatar-pin';
-    pin.dataset.id = s.id;
+    pin.className = 'avatar-pin'; pin.dataset.id = s.id;
     if (s.id === selectedId) pin.classList.add('selected');
     pin.style.left = left + 'px';
     pin.style.animationDelay = (idx * -0.6) + 's';
-
     pin.innerHTML = `
       <div class="avatar-bubble">${s.avatar}</div>
       <div class="avatar-name">${s.name}</div>
       <div class="avatar-pts">${s.points} pts</div>
     `;
-
     pin.style.pointerEvents = 'auto';
-    pin.addEventListener('click', () => selectStudent(s.id));
-
+    pin.addEventListener('click', (e) => { e.stopPropagation(); selectStudent(s.id); });
     pinsLayer.appendChild(pin);
   });
 }
 
-/* ═══════════════════════════════════════════════
-   RENDERIZAÇÃO: PAINEL DE COMANDO
-═══════════════════════════════════════════════ */
-
 function renderCommandPanel() {
-  const empty   = document.getElementById('panel-empty');
-  const panel   = document.getElementById('panel-student');
-
-  if (!selectedId) {
-    empty.classList.remove('hidden');
-    panel.classList.add('hidden');
-    return;
-  }
-
-  const s = students.find(s => s.id === selectedId);
-  if (!s) { deselectStudent(); return; }
-
-  empty.classList.add('hidden');
-  panel.classList.remove('hidden');
-
+  const empty = document.getElementById('panel-empty');
+  const panel = document.getElementById('panel-student');
+  if (!selectedId) { empty.classList.remove('hidden'); panel.classList.add('hidden'); return; }
+  const s = students.find(s => s.id === selectedId); if (!s) { deselectStudent(); return; }
+  empty.classList.add('hidden'); panel.classList.remove('hidden');
   document.getElementById('sel-avatar').textContent = s.avatar;
-  document.getElementById('sel-name').textContent   = s.name;
-  document.getElementById('sel-pts').textContent    = s.points;
-  document.getElementById('sel-bar').style.width    = s.points + '%';
+  document.getElementById('sel-name').textContent = s.name;
+  document.getElementById('sel-pts').textContent = s.points;
+  document.getElementById('sel-bar').style.width = s.points + '%';
 }
-
-/* ═══════════════════════════════════════════════
-   RENDERIZAÇÃO: RANKING
-═══════════════════════════════════════════════ */
 
 function renderRanking() {
   const list = document.getElementById('ranking-list');
-  const countEl = document.getElementById('rank-count');
-
-  if (students.length === 0) {
-    list.innerHTML = '<p class="text-slate-600 text-xs text-center py-6">Nenhum aluno ainda.</p>';
-    countEl.textContent = '0 alunos';
-    return;
-  }
-
+  if (students.length === 0) { list.innerHTML = '<p class="text-slate-600 text-xs text-center py-6">Nenhum aluno.</p>'; return; }
   const sorted = [...students].sort((a, b) => b.points - a.points);
-  countEl.textContent = sorted.length + ' aluno' + (sorted.length !== 1 ? 's' : '');
-
+  document.getElementById('rank-count').textContent = `${sorted.length} alunos`;
+  
   const medals = ['🥇','🥈','🥉'];
-  const barColors = [
-    'linear-gradient(90deg,#FBBF24,#F59E0B)',
-    'linear-gradient(90deg,#94A3B8,#64748B)',
-    'linear-gradient(90deg,#CD7F32,#92400E)',
-  ];
   const badgeBg = ['#78350F','#334155','#431407'];
-  const maxPts  = sorted[0]?.points || 1;
-
   list.innerHTML = '';
+  
   sorted.forEach((s, i) => {
     const item = document.createElement('div');
     item.className = 'rank-item';
-
-    const barColor = i < 3 ? barColors[i] : 'linear-gradient(90deg,#7C3AED,#22D3EE)';
-    const badgeColor = i < 3 ? badgeBg[i] : '#1E293B';
     const medal = i < 3 ? medals[i] : (i + 1);
-
     item.innerHTML = `
-      <div class="rank-badge" style="background:${badgeColor};border:1px solid ${i<3?'#FBBF2444':'#2A3555'};">
-        <span style="font-size:${i<3?'.9rem':'.6rem'}">${medal}</span>
-      </div>
+      <div class="rank-badge" style="background:${i<3?badgeBg[i]:'#1E293B'};"><span>${medal}</span></div>
       <span class="text-lg">${s.avatar}</span>
       <div class="flex-1 min-w-0">
         <p class="text-xs font-bold text-white truncate">${s.name}</p>
-        <div class="rank-bar-bg mt-1">
-          <div class="rank-bar-fill" style="width:${(s.points/100)*100}%;background:${barColor};"></div>
-        </div>
+        <div class="rank-bar-bg mt-1"><div class="rank-bar-fill" style="width:${s.points}%; background: #7C3AED;"></div></div>
       </div>
-      <span class="font-orbitron text-xs font-bold" style="color:${i===0?'#FBBF24':i===1?'#94A3B8':i===2?'#CD7F32':'#A78BFA'}">${s.points}</span>
+      <span class="font-orbitron text-xs font-bold">${s.points}</span>
     `;
-
-    item.addEventListener('click', () => selectStudent(s.id));
+    item.onclick = () => selectStudent(s.id);
     list.appendChild(item);
   });
 }
-
-/* ═══════════════════════════════════════════════
-   RENDERIZAÇÃO: LISTA NO MODAL CONFIG
-═══════════════════════════════════════════════ */
 
 function renderStudentList() {
-  const list = document.getElementById('student-list');
-  if (students.length === 0) {
-    list.innerHTML = '<p class="text-slate-600 text-xs text-center py-4">Nenhum aluno cadastrado.</p>';
-    return;
-  }
+  const list = document.getElementById('student-list'); if (students.length === 0) { list.innerHTML = '---'; return; }
   list.innerHTML = '';
   students.forEach(s => {
-    const item = document.createElement('div');
-    item.className = 'flex items-center gap-2 bg-slate-800 rounded-xl px-3 py-2';
-    item.innerHTML = `
-      <span class="text-xl">${s.avatar}</span>
-      <span class="flex-1 text-sm font-bold text-white">${s.name}</span>
-      <span class="font-orbitron text-xs text-brand-light">${s.points}pts</span>
-      <button onclick="removeStudent('${s.id}')"
-        class="text-red-500 hover:text-red-400 text-sm px-2 transition-colors">✕</button>
-    `;
+    const item = document.createElement('div'); item.className = 'flex items-center gap-2 bg-slate-800 rounded-xl px-3 py-2';
+    item.innerHTML = `<span>${s.avatar}</span><span class="flex-1 text-sm font-bold">${s.name}</span><button onclick="removeStudent('${s.id}')" class="text-red-500 px-2">✕</button>`;
     list.appendChild(item);
   });
 }
 
-/* ═══════════════════════════════════════════════
-   RENDER TUDO
-═══════════════════════════════════════════════ */
-
-function renderAll() {
-  renderTrail();
-  renderCommandPanel();
-  renderRanking();
-  renderStudentList();
-}
-
-/* ═══════════════════════════════════════════════
-   ENCERRAR MÊS / PÓDIO
-═══════════════════════════════════════════════ */
+function renderAll() { renderTrail(); renderCommandPanel(); renderRanking(); renderStudentList(); }
 
 function endMonth() {
-  if (students.length === 0) {
-    showToast('⚠️ Nenhum aluno para encerrar!');
-    return;
+  if (students.length === 0) return;
+  const sorted = [...students].sort((a, b) => b.points - a.points);
+  const podiumEl = document.getElementById('podium-display');
+  const namesEl = document.getElementById('podium-names');
+  
+  podiumEl.innerHTML = ''; namesEl.innerHTML = '';
+  
+  // Layout posições: 2º, 1º, 3º
+  const p3 = sorted[2]; const p2 = sorted[1]; const p1 = sorted[0];
+
+  if(p2) {
+    podiumEl.innerHTML += `<div class="podium-col"><div>${p2.avatar}</div><div class="text-xs truncate max-w-[80px]">${p2.name}</div><div class="podium-block podium-2">🥈</div></div>`;
+  }
+  if(p1) {
+    podiumEl.innerHTML += `<div class="podium-col"><div>${p1.avatar}</div><div class="text-xs truncate max-w-[80px] font-bold text-gold">${p1.name}</div><div class="podium-block podium-1">🥇</div></div>`;
+  }
+  if(p3) {
+    podiumEl.innerHTML += `<div class="podium-col"><div>${p3.avatar}</div><div class="text-xs truncate max-w-[80px]">${p3.name}</div><div class="podium-block podium-3">🥉</div></div>`;
   }
 
-  const sorted = [...students].sort((a, b) => b.points - a.points).slice(0, 3);
-
-  // monta pódio
-  const podiumEl = document.getElementById('podium-display');
-  const namesEl  = document.getElementById('podium-names');
-
-  // ordem visual: 2º | 1º | 3º
-  const order = [sorted[1], sorted[0], sorted[2]].filter(Boolean);
-  const podiumClass = ['podium-2','podium-1','podium-3'];
-  const podiumH     = ['90px','120px','70px'];
-  const medals      = ['🥈','🥇','🥉'];
-  const realOrder   = [1, 0, 2]; // índices correspondentes ao sorted
-
-  podiumEl.innerHTML = '';
-  namesEl.innerHTML  = '';
-
-  order.forEach((s, vi) => {
-    const origIdx = realOrder[vi];
-    const col = document.createElement('div');
-    col.className = 'podium-col';
-    col.innerHTML = `
-      <div class="podium-avatar" style="animation-delay:${vi*.2}s;animation:starPop .5s ${vi*.18}s ease both">${s.avatar}</div>
-      <div class="text-xs font-bold text-center text-white/80 max-w-[90px] truncate">${s.name}</div>
-      <div class="podium-block ${podiumClass[vi]}" style="height:${podiumH[vi]}">${medals[vi]}</div>
-    `;
-    podiumEl.appendChild(col);
-
-    const nameTag = document.createElement('div');
-    nameTag.className = 'flex-1 text-center';
-    nameTag.innerHTML = `
-      <div class="text-xs text-slate-400">${origIdx===0?'1º':'2º'}…</div>
-      <div class="text-xs font-bold text-white truncate">${s.points} pts</div>
-    `;
-    namesEl.appendChild(nameTag);
-  });
-
-  // Guarda campeão para certificado
-  window._champion = sorted[0];
-
-  openModal('modal-podium');
-  launchConfetti();
+  window._champion = p1;
+  openModal('modal-podium'); launchConfetti();
 }
-
-/* ═══════════════════════════════════════════════
-   CONFETTI
-═══════════════════════════════════════════════ */
 
 function launchConfetti() {
-  const colors = ['#FBBF24','#A78BFA','#22D3EE','#F472B6','#34D399','#F87171'];
-  for (let i = 0; i < 60; i++) {
-    const c = document.createElement('div');
-    c.className = 'confetti-piece';
-    c.style.left = Math.random() * 100 + 'vw';
-    c.style.background = colors[Math.floor(Math.random() * colors.length)];
-    c.style.animationDelay = (Math.random() * 1.5) + 's';
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div'); c.className = 'confetti-piece';
+    c.style.left = Math.random() * 100 + 'vw'; c.style.background = '#FBBF24';
     c.style.animationDuration = (2 + Math.random() * 2) + 's';
-    c.style.width = (8 + Math.random() * 8) + 'px';
-    c.style.height = (8 + Math.random() * 8) + 'px';
-    c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 5000);
+    document.body.appendChild(c); setTimeout(() => c.remove(), 4000);
   }
 }
 
-/* ═══════════════════════════════════════════════
-   CERTIFICADO
-═══════════════════════════════════════════════ */
-
 function generateCertificate() {
-  const champ = window._champion;
-  if (!champ) return;
-
-  const certArea = document.getElementById('cert-area');
-  const today    = new Date().toLocaleDateString('pt-BR', { day:'numeric', month:'long', year:'numeric' });
-
-  certArea.innerHTML = `
-    <div style="
-      width:100%; min-height:100vh;
-      background: linear-gradient(135deg,#0B0F1A 0%,#1E1B3A 100%);
-      display:flex; align-items:center; justify-content:center;
-      font-family:'Nunito',sans-serif;
-      padding:40px;
-    ">
-      <div style="
-        width:100%; max-width:700px;
-        background: linear-gradient(145deg,#131929,#0B0F1A);
-        border:3px solid #FBBF24;
-        border-radius:24px;
-        padding:60px 50px;
-        text-align:center;
-        box-shadow: 0 0 60px rgba(251,191,36,.3), inset 0 0 40px rgba(124,58,237,.1);
-        position:relative;
-        overflow:hidden;
-      ">
-        <!-- decoração de fundo -->
-        <div style="
-          position:absolute;inset:0;
-          background: radial-gradient(ellipse at 50% 0%,rgba(251,191,36,.08) 0%,transparent 60%);
-          pointer-events:none;
-        "></div>
-
-        <!-- bordas decorativas -->
-        <div style="position:absolute;top:12px;left:12px;right:12px;bottom:12px;border:1px solid rgba(251,191,36,.25);border-radius:16px;pointer-events:none;"></div>
-
-        <!-- cabeçalho -->
-        <div style="margin-bottom:20px;">
-          <span style="font-size:4rem;display:block;margin-bottom:8px;">🏆</span>
-          <div style="
-            font-family:'Orbitron',sans-serif;
-            font-size:2.2rem; font-weight:900;
-            background:linear-gradient(135deg,#FBBF24,#F59E0B);
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-            letter-spacing:.06em;
-          ">CLASSUP</div>
-          <div style="color:#94A3B8;font-size:.8rem;font-weight:700;letter-spacing:.2em;margin-top:4px;">CERTIFICADO DE EXCELÊNCIA</div>
-        </div>
-
-        <!-- divisor -->
-        <div style="width:60%;height:2px;background:linear-gradient(90deg,transparent,#FBBF24,transparent);margin:0 auto 28px;"></div>
-
-        <!-- texto -->
-        <p style="color:#94A3B8;font-size:1rem;margin-bottom:12px;">Certificamos com honra que</p>
-        <div style="
-          font-size:3rem;margin-bottom:10px;
-          filter:drop-shadow(0 0 20px rgba(251,191,36,.5));
-        ">${champ.avatar}</div>
-        <h1 style="
-          font-family:'Orbitron',sans-serif;
-          font-size:2rem; font-weight:900; color:#fff;
-          margin-bottom:16px; letter-spacing:.03em;
-        ">${champ.name}</h1>
-        <p style="color:#A78BFA;font-size:1.05rem;font-weight:700;margin-bottom:6px;">
-          é o <strong style="color:#FBBF24;">Aluno Destaque do Mês</strong>
-        </p>
-        <p style="color:#64748B;font-size:.9rem;margin-bottom:4px;">
-          com incríveis <strong style="color:#22D3EE;">${champ.points} pontos</strong> conquistados
-        </p>
-        <p style="color:#64748B;font-size:.85rem;margin-bottom:28px;">na Jornada do Conhecimento — Turma 22</p>
-
-        <!-- divisor -->
-        <div style="width:60%;height:1px;background:linear-gradient(90deg,transparent,#2A3555,transparent);margin:0 auto 24px;"></div>
-
-        <!-- professores -->
-        <p style="color:#475569;font-size:.75rem;letter-spacing:.1em;margin-bottom:10px;">COM ORGULHO DOS PROFESSORES</p>
-        <div style="display:flex;justify-content:center;gap:24px;margin-bottom:24px;">
-          <div style="text-align:center;"><span style="font-size:1.8rem;">👩‍🦰</span><br><span style="color:#94A3B8;font-size:.7rem;font-weight:700;">Tia Rosinha</span></div>
-          <div style="text-align:center;"><span style="font-size:1.8rem;">👨🏻‍🏫</span><br><span style="color:#94A3B8;font-size:.7rem;font-weight:700;">Teacher Ramon</span></div>
-          <div style="text-align:center;"><span style="font-size:1.8rem;">👩🏾‍🦱</span><br><span style="color:#94A3B8;font-size:.7rem;font-weight:700;">Tia Judvânia</span></div>
-        </div>
-
-        <!-- data -->
-        <p style="color:#334155;font-size:.75rem;font-weight:700;">${today}</p>
-
-        <!-- estrelinhas decorativas -->
-        <div style="position:absolute;top:20px;right:25px;font-size:1.5rem;opacity:.4;">⭐</div>
-        <div style="position:absolute;top:40px;right:45px;font-size:.9rem;opacity:.25;">✨</div>
-        <div style="position:absolute;top:20px;left:25px;font-size:1.5rem;opacity:.4;">⭐</div>
-        <div style="position:absolute;bottom:30px;left:20px;font-size:1rem;opacity:.2;">🌟</div>
-        <div style="position:absolute;bottom:30px;right:20px;font-size:1rem;opacity:.2;">🌟</div>
-      </div>
-    </div>
-  `;
-
-  // Pequeno delay e então imprimir
-  setTimeout(() => window.print(), 150);
+  const champ = window._champion; if (!champ) return;
+  const today = new Date().toLocaleDateString('pt-BR', { day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('cert-area').innerHTML = `
+    <div style="padding:50px; text-align:center; background:#fff; color:#000; border:10px double #FBBF24; min-height:100vh;">
+      <h1 style="font-family:'Orbitron',sans-serif; font-size:3rem; color:#7C3AED;">ClassUp</h1>
+      <h2>CERTIFICADO DE ALUNO DESTAQUE</h2>
+      <p>Parabéns incrível aluno(a)</p>
+      <h1 style="font-size:3.5rem;">${champ.avatar} ${champ.name} 🏅</h1>
+      <p>Pelo excelente desempenho, participação e gentileza na Turma 22.</p>
+      <p>Professores: Tia Rosinha, Teacher Ramon e Tia Judvânia</p>
+      <h3>${today}</h3>
+    </div>`;
+  setTimeout(() => window.print(), 100);
 }
 
-/* ═══════════════════════════════════════════════
-   RESIZE: RE-RENDERIZAR TRILHA
-═══════════════════════════════════════════════ */
-
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => renderTrail(), 200);
-});
-
-/* ═══════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════ */
-
 document.addEventListener('DOMContentLoaded', () => {
-  loadData();
-  buildEmojiPicker();
-  renderAll();
-
-  // Fechar modais clicando no overlay
+  loadData(); buildEmojiPicker(); renderAll();
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', e => {
-      if (e.target === overlay) {
-        closeModal(overlay.id);
-      }
-    });
-  });
-
-  // Enter no campo de nome adiciona aluno
-  document.getElementById('inp-name').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addStudent();
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(overlay.id); });
   });
 });
+window.addEventListener('resize', () => { renderTrail(); });
 </script>
 </body>
 </html>
